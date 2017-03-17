@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        /*
+        * 抽取jQ框架的结构：
+        * */
+
+        // 1、jQ结构整体是一个自调，自调是为了防止全局变量的污染
+        (function( global, factory ) {
+
+            // global对应的就是window
+            // factory对应的就是第二个函数，这个函数返回一个jQuery工厂函数
+            // 这里jQ对模块化做了一些支持
+            factory( global );
+
+        })( typeof window !== "undefined" ? window : this, function( window ) {
+
+            // jQ的主体代码都在这里
+
+            // 3、这是jQ对外暴露的工厂函数
+            // 对外暴露工厂，是为了简化用户创建对象的代码量
+            var jQuery = function() {
+                return new jQuery.fn.init();
+            };
+
+            // 4、置换原型，同时给原型起了一个简称，方便用户和自己使用
+            // 给jQ原型起一个简称是因为：jQ实现了一个插件机制，
+            // 说白了就给让用户可以自由扩展原型，那么为了让用户再少写一些单词所以起了一个简称。
+            jQuery.fn = jQuery.prototype = {
+                constructor: jQuery,
+                alert: function( msg ) {
+                    alert( msg );
+                }
+            };
+
+            // 5、定义构造函数，同时把构造函数加到了jQuery工厂函数的原型中
+            // 这是jQ内部影响的构造函数
+            var init = jQuery.fn.init = function() {
+
+            };
+
+            // 6、让构造函数的原型与工厂函数的原型保持一致
+            // 置换构造函数原型为工厂函数原型，是为了让实例能够调用工厂函数原型里面的成员
+            init.prototype = jQuery.fn;
+
+            // 2、在jQ主体代码中对外暴露了两个变量，这两个变量指向同一个工厂函数
+            window.jQuery = window.$ = jQuery;
+
+            return jQuery;
+        });
+
+        console.log($());
+        $().alert('方法调用');
+    </script>
+</body>
+</html>

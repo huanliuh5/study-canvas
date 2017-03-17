@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        /*
+        * canvas中状态是指绘制上下文所有的属性值。
+        * */
+
+        /*
+        * 状态保存：
+        * 就是把ctx对象当前所有的属性值进行备份(copy一份存储起来)。
+        * ctx.save();
+        * */
+
+        /*
+        * 状态回滚：
+        * 就是把之前备份的状态取出来，作为当前状态使用。
+        * ctx.restore();
+        * */
+
+        ctx.save();  // 备份默认的状态
+
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect( 10, 10, 100, 100 );
+
+        ctx.restore(); // 回滚到上一次备份的状态
+        ctx.strokeRect( 150, 150, 100, 100 );
+
+    </script>
+</body>
+</html>

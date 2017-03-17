@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        /*
+        * 路径点判断：
+        * 判断指定的点，在不在当前页面的路径内。
+        * ctx.isPointInPath( 要判断的点x坐标，要判断的点y坐标 )
+        * */
+        ctx.rect( 10, 10, 100, 100 );
+        ctx.stroke();
+
+        cvs.addEventListener( 'click', function( e ) {
+            var x = e.pageX - cvs.offsetLeft;
+            var y = e.pageY - cvs.offsetTop;
+            alert( ctx.isPointInPath( x, y ) );
+        } );
+    </script>
+</body>
+</html>

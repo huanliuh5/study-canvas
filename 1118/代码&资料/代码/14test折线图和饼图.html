@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="lineChart.js"></script>
+    <script src="pipeChart.js"></script>
+</head>
+<body>
+    <canvas style="border: 1px solid red" width="500" height="500"></canvas>
+    <canvas style="border: 1px solid red" width="500" height="500"></canvas>
+    <script>
+
+        /*------------------------------测试折线图------------------------------*/
+
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        // 需求，把门口麻辣烫7天的销售额绘制成折线图
+        var data = [ 200, 300, 50, 80, 120, 150, 400, 200, 300, 50, 80, 120, 150, 400, 200, 300, 50, 80, 120, 150, 400, 200, 300, 50, 80, 120, 150, 400 ];
+        var lineChart = new LineChart( ctx, [ 20, 20, 20, 20 ], [ 10, 20 ], data );
+        lineChart.draw();
+
+
+        /*---------------------------测试饼图------------------------------------*/
+        var cvs2 = document.querySelectorAll('canvas')[1];
+        var ctx2 = cvs2.getContext('2d');
+
+        var data = [
+            { val: 100, msg: '喜欢女生' }, { val: 100, msg: '喜欢男生' }, { val: 200, msg: '都喜欢的' }, { val: 150, msg: '喜欢同性' }
+        ];
+        var pipeChart = new PipeChart(ctx2, data, 200, 200, 80);
+        pipeChart.draw();
+    </script>
+</body>
+</html>

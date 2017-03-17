@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect( 100, 100, 100, 100 );
+
+        /*
+        * 如何绘制一个矩形的自转版本：
+        * 1、先平移坐标系的0,0点到图形的中心点
+        * 2、按照指定弧度旋转坐标系
+        * 3、绘制自转版本的矩形，但是x坐标变为了负宽的一半，y坐标为负高的一半
+        * */
+
+        // 绘制上面矩形自转30度的版本
+        ctx.translate( 100 + 50, 100 + 50 );
+        ctx.rotate( Math.PI / 4 );
+        ctx.fillStyle = 'red';
+        ctx.fillRect( -50, -50, 100, 100 );
+
+    </script>
+</body>
+</html>

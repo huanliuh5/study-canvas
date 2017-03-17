@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        // 1、自调防止全局变量污染
+        (function( window ) {
+
+            // 3、定义工厂
+            var jQuery = function() {
+                return new jQuery.fn.init();
+            }
+
+            // 4、工厂原型置换&简称
+            jQuery.fn = jQuery.prototype = {
+                constructor: jQuery
+            };
+
+            // 5、定义构造函数
+            var init = jQuery.fn.init = function() {
+
+            };
+
+            // 6、置换构造原型为工厂原型
+            init.prototype = jQuery.fn;
+
+            // 2、暴露工厂
+            window.jQuery = window.$ = jQuery;
+
+        })( window );
+    </script>
+</body>
+</html>

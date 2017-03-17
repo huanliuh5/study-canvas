@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        /*
+        * 旋转：
+        * 备注：这里旋转的是画布坐标系，旋转后不会影响到之前绘制好的内容，旋转会累加
+        * 备注2：旋转时的中心是坐标系的0,0点。
+        * ctx.rotate( 旋转的弧度 )
+        * */
+
+        ctx.translate( 100, 100 );
+
+        ctx.fillStyle = 'blue';
+        ctx.fillRect( 0, 0, 100, 100 );
+
+        // 旋转后再按照同样的坐标绘制矩形
+        ctx.rotate( Math.PI / 5 );
+        ctx.fillStyle = 'red';
+        ctx.fillRect( 0, 0, 100, 100 );
+
+
+        // 再次平移后再按照同样的坐标绘制矩形
+        ctx.rotate( Math.PI / 5 );
+        ctx.fillStyle = 'green';
+        ctx.fillRect( 0, 0, 100, 100 );
+    </script>
+</body>
+</html>

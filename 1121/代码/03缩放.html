@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        /*
+        * 缩放：
+        * 备注：这里缩放的是画布坐标系，缩放后不会影响到之前绘制好的内容，缩放会累加
+        * ctx.scale( x轴缩放多少倍，y轴缩放多少倍 )
+        * */
+
+        ctx.fillStyle = 'blue';
+        ctx.fillRect( 0, 0, 200, 200 );
+
+        // 缩放后再按照同样的坐标绘制矩形
+        ctx.scale( 0.5, 0.5 );
+        ctx.fillStyle = 'red';
+        ctx.fillRect( 0, 0, 200, 200 );
+
+
+        // 再次缩放后再按照同样的坐标绘制矩形
+        ctx.scale( 0.5, 0.5 );
+        ctx.fillStyle = 'green';
+        ctx.fillRect( 0, 0, 200, 200 );
+    </script>
+</body>
+</html>

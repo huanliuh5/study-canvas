@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>实现面向对象封装</title>
+	<script>
+		function Person(name, age) {
+			return {
+				getAge: function() {
+					return age;
+				},
+				getName: function() {
+					return name
+				},
+				setAge: function(val) {
+					age = val;
+				}
+			};
+		}
+
+		var zs = new Person('张三', 18);
+		console.log(zs.name); // undefined
+		console.log(zs.getName());
+		console.log(zs.age);// undefined
+		console.log(zs.getAge());
+		zs.setAge(68);
+		console.log(zs.getAge());
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

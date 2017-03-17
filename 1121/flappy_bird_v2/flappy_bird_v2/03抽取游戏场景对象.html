@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/common/util.js"></script>
+    <script src="./js/common/loadImg.js"></script>
+    <script src="./js/roles/sky.js"></script>
+    <script src="./js/roles/land.js"></script>
+    <script src="./js/roles/bird.js"></script>
+    <script src="./js/roles/timer.js"></script>
+    <script src="./js/roles/pipe.js"></script>
+    <script src="./js/scene/gameScene.js"></script>
+</head>
+<body>
+    <canvas style="border: 1px solid red" width="800" height="600"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        // 加载游戏所需的所有图片，
+        // 加载完毕后就可以创建不同的对象，
+        // 然后绘制到画布中，共同构成游戏画面
+        loadImg({
+            bird: './imgs/birds.png',
+            land: './imgs/land.png',
+            pipeDown: './imgs/pipeDown.png',
+            pipeUp: './imgs/pipeUp.png',
+            sky: './imgs/sky.png'
+        }, function( loadedImg ) {
+
+            var gameLastTime, isStop = false;
+            var gameScene = new GameScene( { ctx: ctx, imgs: loadedImg } );
+            var overScene = new OverScene( { ctx: ctx } );
+
+            // 小鸟死了，定时器结束
+            gameScene.addBirdDieCbk( function() {
+                isStop = true;
+            } );
+
+            // 小鸟死了，绘制游戏结束场景
+            gameScene.addBirdDieCbk( function() {
+                overScene.run();
+            } );
+
+            (function loop() {
+
+                // 如果游戏结束了，那么直接返回，不在轮回调用
+                if( isStop ) {
+                    return;
+                }
+
+                /*
+                 * 计算当前游戏画面和上一次游戏画面绘制时中间的时间差：
+                 * 1、先记录一个游戏最后一次绘制的时间
+                 * 2、然后每次绘制新的游戏画面时，得到当前最新的时间
+                 * 3、两个游戏画面之间所间隔的时间 = 当前最新时间 - 上一次绘制时的时间
+                 * */
+
+                // 游戏画面最后一次绘制的时间，
+                // 第一次为当前时间，以后都为上一次游戏画面绘制的时间
+                gameLastTime = gameLastTime? gameLastTime: Date.now();
+                var gameCurrentTime = Date.now();
+                var delaySecond = (gameCurrentTime - gameLastTime) / 1000;
+
+                // 下一次游戏画面绘制的最后时间，是当前时间
+                gameLastTime = gameCurrentTime;
+
+                // 每次绘制新游戏画面时，先清除老的画面和老的管道路径
+                ctx.clearRect( 0, 0, cvs.width, cvs.height );
+                ctx.beginPath();
+                gameScene.run( delaySecond );
+
+                requestAnimationFrame( loop );
+            }());
+        });
+    </script>
+</body>
+</html>

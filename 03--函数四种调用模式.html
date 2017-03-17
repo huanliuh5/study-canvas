@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>函数四种调用模式</title>
+	<script>
+		//==========普通函数执行模式============
+		function foo() {
+			console.log(this); // this -> window
+		}
+		foo(); // 普通函数执行模式
+
+		//==========构造函数执行模式============
+		function fn() {
+			console.log(this); // this -> 构造函数创建出来的对象
+		}
+		var f = new fn; // 构造函数执行模式
+		var ff = new fn;
+
+		//==========方法调用模式==============
+		var o = {
+			say: function() {
+				console.log(this); // this -> 方法的调用者， 即对象o。
+			}
+		};
+		o.say(); // 方法调用模式
+
+		//==========上下文模式================
+		function print() {
+			console.log(this.name);
+		}
+		var obj = {
+			name: "tom"
+		};
+		print();
+		print.call(obj); // tom
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

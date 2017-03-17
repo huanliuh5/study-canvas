@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/loadImg.js"></script>
+</head>
+<body>
+    <canvas style="border: 1px solid red" width="800" height="600"></canvas>
+    <script>
+        (function( w ) {
+
+            /*
+            * constrctor { Sky } 游戏背景
+            * param { options } 背景参数配置
+            * patam { options.ctx: Context } 绘图环境
+            * patam { options.img: Image } 背景图片
+            * */
+            function Sky( options ) {
+
+                this.ctx = options.ctx;
+                this.img = options.img;
+
+                // 背景默认的位置
+                this.x = 0;
+                this.y = 0;
+
+                // 一张背景的宽和高
+                this.width = options.img.width;
+                this.height = options.img.height;
+
+                // 背景每秒运行的速度
+                this.speedSecond = 100;
+            }
+
+            // 替换原型
+            Sky.prototype = {
+
+                constructor: Sky,
+
+                // 绘制背景
+                draw: function() {
+                    this.ctx.drawImage( this.img, this.x, this.y );
+                },
+
+                // 更新背景下一次绘制时的数据
+                update: function( delaySecond ) {
+
+                    // 背景匀速运动，行走的总路程 = 初速度 * 时间
+                    this.x -= this.speedSecond * delaySecond;
+                }
+            };
+
+            w.Sky = Sky;
+        }( window ));
+    </script>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        // 加载游戏所需的所有图片，
+        // 加载完毕后就可以创建不同的对象，
+        // 然后绘制到画布中，共同构成游戏画面
+        loadImg({
+            bird: './imgs/birds.png',
+            land: './imgs/land.png',
+            pipeDown: './imgs/pipeDown.png',
+            pipeUp: './imgs/pipeUp.png',
+            sky: './imgs/sky.png'
+        }, function( loadedImg ) {
+            var sky = new Sky( { ctx: ctx, img: loadedImg.sky } );
+
+            var gameLastTime;
+
+            setInterval( function() {
+
+                /*
+                * 计算当前游戏画面和上一次游戏画面绘制时中间的时间差：
+                * 1、先记录一个游戏最后一次绘制的时间
+                * 2、然后每次绘制新的游戏画面时，得到当前最新的时间
+                * 3、两个游戏画面之间所间隔的时间 = 当前最新时间 - 上一次绘制时的时间
+                * */
+
+                // 游戏画面最后一次绘制的时间，
+                // 第一次为当前时间，以后都为上一次游戏画面绘制的时间
+                gameLastTime = gameLastTime? gameLastTime: Date.now();
+                var gameCurrentTime = Date.now();
+                var delaySecond = (gameCurrentTime - gameLastTime) / 1000;
+
+                // 下一次游戏画面绘制的最后时间，是当前时间
+                gameLastTime = gameCurrentTime;
+
+                // 每次绘制新游戏画面时，先清除老的画面
+                ctx.clearRect( 0, 0, cvs.width, cvs.height );
+
+                // 不断的绘制游戏中的角色
+                sky.draw();
+                sky.update( delaySecond );
+            }, 50);
+        });
+    </script>
+</body>
+</html>

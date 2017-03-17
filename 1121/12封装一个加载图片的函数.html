@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+
+        /*// 传入要加载图像的地址，返回给调用者一个加载好的img对象
+        function loadImg( src ) {
+            var img = new Image();
+            img.src = src;
+            img.onload = function() {
+                return img;
+            };
+        }
+
+        // 因为图片加载是异步的，什么时候加载完毕不知道，所以正常的return是无法解决这个问题的。
+        console.log( loadImg('./youyouyou.jpg') );*/
+
+        /*--------------------------------解决方案：使用回调----------------------------------------------*/
+
+        // 传入要加载图像的地址，返回给调用者一个加载好的img对象
+        function loadImg( src, fn ) {
+            var img = new Image();
+            img.src = src;
+
+            // 图片加载完毕后，执行回调，并把加载好的img传入过去供其使用
+            img.onload = function() {
+                fn( img );
+            };
+        }
+
+
+        // 当图片加载完毕后，回调才会被执行
+        loadImg('./youyouyou.jpg', function( loadedImg ) {
+
+            // 测试，如果有宽高，证明图片加载完毕了
+            alert(loadedImg.width);
+        });
+    </script>
+</body>
+</html>

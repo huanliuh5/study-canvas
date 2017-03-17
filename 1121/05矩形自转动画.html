@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas style="border:1px solid red" width="500" height="500"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        // 在100，100点绘制一个宽高各位200的自转矩形
+
+        /*
+        * 实现思路：
+        * 1、先平移到矩形的中心
+        * 2、开启一个定时器
+        * 3、定时器的回调里面，不断清除上一个矩形，然后旋转坐标系，在绘制新图形
+        * */
+
+        var x = 100, y = 100;
+        var width = 200, height = 200;
+        ctx.fillStyle = 'deeppink';
+        ctx.translate( x + width / 2, y + height / 2 );
+
+        // 矩形每次旋转4.5度
+        setInterval( function() {
+
+            // 因为绘制矩形时，起点为负坐标，所以清除的时候，也得按照负坐标来清除
+            ctx.clearRect( -width, -height, cvs.width, cvs.height );
+
+            // 不断旋转4.5度绘制矩形
+            ctx.rotate( Math.PI / 40 );
+            ctx.fillRect( -width / 2, -height / 2, width, height );
+        }, 50);
+
+    </script>
+</body>
+</html>

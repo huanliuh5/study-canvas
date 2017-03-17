@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/common/util.js"></script>
+    <script src="./js/common/loadImg.js"></script>
+    <script src="./js/roles/sky.js"></script>
+    <script src="./js/roles/land.js"></script>
+    <script src="./js/roles/bird.js"></script>
+    <script src="./js/roles/timer.js"></script>
+    <script src="./js/roles/pipe.js"></script>
+</head>
+<body>
+    <canvas style="border: 1px solid red" width="800" height="600"></canvas>
+    <script>
+        var cvs = document.querySelector('canvas');
+        var ctx = cvs.getContext('2d');
+
+        // 加载游戏所需的所有图片，
+        // 加载完毕后就可以创建不同的对象，
+        // 然后绘制到画布中，共同构成游戏画面
+        loadImg({
+            bird: './imgs/birds.png',
+            land: './imgs/land.png',
+            pipeDown: './imgs/pipeDown.png',
+            pipeUp: './imgs/pipeUp.png',
+            sky: './imgs/sky.png'
+        }, function( loadedImg ) {
+
+            // 存储游戏中所有的角色
+            var roles = [];
+
+            // 创建2个背景对象
+            for( var i = 0; i < 2; i++ ) {
+                roles.push( new Sky( { ctx: ctx, img: loadedImg.sky } ) );
+            }
+
+            // 创建7个管道对象
+            for( var i = 0; i < 7; i++ ) {
+                roles.push(new Pipe( { ctx: ctx, imgDown: loadedImg.pipeDown, imgUp: loadedImg.pipeUp,
+                    pipeTBSpace: 150, pipeLRSpace: 100, minHeight: 50,
+                    maxHeight: cvs.height - loadedImg.land.height - 50 - 150 } ));
+            }
+
+            // 创建4个大地对象
+            for( var i = 0; i < 4; i++ ) {
+                roles.push( new Land( { ctx: ctx, img: loadedImg.land } ) );
+            }
+
+            // 创建1个计时器对象
+            roles.push( new Timer( { ctx: ctx } ) );
+
+            // 创建1个鸟对象
+            var bird = new Bird( { ctx: ctx, img: loadedImg.bird, widthFrame: 3, heightFrame: 1 } );
+            roles.push( bird );
+
+            var gameLastTime, isStop = false;
+
+            (function loop() {
+
+                // 如果游戏结束了，那么直接返回，不在轮回调用
+                if( isStop ) {
+                    return;
+                }
+
+                // 判断小鸟有没有死亡，死亡则停止定时器，并且跳出该函数
+                var birdCoreX = bird.x + bird.width / 2;
+                var birdCoreY = bird.y + bird.height / 2;
+                if( birdCoreY < 0 || birdCoreY > (cvs.height - loadedImg.land.height) ||
+                        ctx.isPointInPath( birdCoreX, birdCoreY ) ) {
+                    isStop = true;
+                    return;
+                }
+
+                /*
+                 * 计算当前游戏画面和上一次游戏画面绘制时中间的时间差：
+                 * 1、先记录一个游戏最后一次绘制的时间
+                 * 2、然后每次绘制新的游戏画面时，得到当前最新的时间
+                 * 3、两个游戏画面之间所间隔的时间 = 当前最新时间 - 上一次绘制时的时间
+                 * */
+
+                // 游戏画面最后一次绘制的时间，
+                // 第一次为当前时间，以后都为上一次游戏画面绘制的时间
+                gameLastTime = gameLastTime? gameLastTime: Date.now();
+                var gameCurrentTime = Date.now();
+                var delaySecond = (gameCurrentTime - gameLastTime) / 1000;
+
+                // 下一次游戏画面绘制的最后时间，是当前时间
+                gameLastTime = gameCurrentTime;
+
+                // 每次绘制新游戏画面时，先清除老的画面和老的管道路径
+                ctx.clearRect( 0, 0, cvs.width, cvs.height );
+                ctx.beginPath();
+
+                // 不断的绘制游戏中的角色
+                roles.forEach( function( role ) {
+                    role.draw();
+                    role.update( delaySecond );
+                });
+
+                requestAnimationFrame( loop );
+            }());
+        });
+    </script>
+</body>
+</html>
